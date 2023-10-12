@@ -1,34 +1,28 @@
+
 int soilMoistureSensorPin = A0;
-int pumpPin = LED_BUILTIN;
-int moistureThreshold = 20;
+int pumpPin = D2;
+int moistureThreshold = 35;
 int pauseDuration = 20000;
 
-void setup(){
+void setup() {
   pinMode(soilMoistureSensorPin, INPUT);
   pinMode(pumpPin, OUTPUT);
   Serial.begin(9600);
 }
 
-void loop(){
-  long sensorReading = analogRead(soilMoistureSensorPin);
-  // update the 3rd parameter of the map function depending
-  // on the sensitivity of your soil moisture sensor
-  long moistureContent = map(sensorReading, 1024, 700, 0, 100);
-  Serial.print("Soil Moisture Content: ");
+void loop() {
+  float sensorReading = analogRead(soilMoistureSensorPin);
+  float moistureContent = map(sensorReading, 1024, 633, 0, 100);
+  Serial.print("Soil Moisture ");
   Serial.print(moistureContent);
   Serial.println("%");
   if(moistureContent < moistureThreshold){
-    Serial.println("The moisture content of the soil is less than the threshold...");
-    waterThePlant(pauseDuration, 500);
+    digitalWrite(pumpPin, HIGH);
+    Serial.println("Watering the Plant... ");
+    delay(500);
+    digitalWrite(pumpPin, LOW);
+    Serial.println("Pause for 20 sec.. ");
+    delay(pauseDuration);
   }
   delay(1000);
-}
-
-void waterThePlant(int pause, int wateringDuration){
-  digitalWrite(pumpPin, LOW);
-  Serial.println("Watering the plant...");
-  delay(wateringDuration);
-  digitalWrite(pumpPin, HIGH);
-  Serial.println("Waiting for the soil to absorb water...");
-  delay(pause);
 }
