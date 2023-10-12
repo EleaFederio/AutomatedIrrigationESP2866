@@ -11,6 +11,8 @@ void setup(){
 
 void loop(){
   long sensorReading = analogRead(soilMoistureSensorPin);
+  // update the 3rd parameter of the map function depending
+  // on the sensitivity of your soil moisture sensor
   long moistureContent = map(sensorReading, 1024, 700, 0, 100);
   Serial.print("Soil Moisture Content: ");
   Serial.print(moistureContent);
